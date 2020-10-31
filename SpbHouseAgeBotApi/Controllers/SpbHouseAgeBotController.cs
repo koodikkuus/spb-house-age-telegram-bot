@@ -20,5 +20,11 @@ namespace SpbHouseAgeBotApi.Controllers
         {
             return _addressService.GetAddressFromUserLocation(longitude, latitude);
         }
+
+        [HttpGet]
+        public IEnumerable<Address> Get(string address)
+        {
+            return _addressService.GetAddressFromUserQuery(address.Split(' '));
+        }
     }
 }
