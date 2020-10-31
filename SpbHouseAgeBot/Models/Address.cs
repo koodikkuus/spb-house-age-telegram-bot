@@ -9,7 +9,7 @@ namespace SpbHouseAgeBot.Models
         public string Latitude { get; set; }
         public int ConstructionYear { get; set; }
 
-        public string Year() => ConstructionYear != 0 
+        public string Age() => ConstructionYear != 0 
             ? (DateTime.Now.Year - ConstructionYear).ToString() 
             : "unkknown";
     }
