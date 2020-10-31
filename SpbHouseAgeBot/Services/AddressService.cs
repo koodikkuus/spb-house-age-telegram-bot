@@ -2,6 +2,7 @@
 using SpbHouseAgeBot.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 
@@ -41,11 +42,12 @@ namespace SpbHouseAgeBot.Services
             {
                 foreach (HtmlNode cell in row.SelectNodes("//td/a/@href"))
                 {
+                    var constructionYearCell = row.SelectSingleNode("//td[5]");
+                    int.TryParse(constructionYearCell.InnerText, out int constructionYear);
                     result.Add(new Address
                     {
-                        Name = cell.InnerText
-                        // todo add year of construction
-                        // todo add age field
+                        Name = cell.InnerText,
+                        ConstructionYear = constructionYear
                         // todo: add additional search for second page
                         // todo: remove duplicated data
                     });

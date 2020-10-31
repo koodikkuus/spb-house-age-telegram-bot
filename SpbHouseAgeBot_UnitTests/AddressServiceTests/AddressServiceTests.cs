@@ -38,5 +38,14 @@ namespace SpbHouseAgeBot_UnitTests
             var actualResult = addressService.GetAddressFromUserQuery(searchParams);
             Assert.IsTrue(actualResult.Any());
         }
+
+        [Test]
+        public void List_Of_Parsed_Addresses_Contains_Year()
+        {
+            var addressService = new AddressService();
+            var searchParams = new string[] { "Каменноостровский", "4" };
+            var actualResult = addressService.GetAddressFromUserQuery(searchParams);
+            Assert.IsTrue(actualResult.FirstOrDefault().ConstructionYear != 0);
+        }
     }
 }
