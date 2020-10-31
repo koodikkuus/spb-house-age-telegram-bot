@@ -1,4 +1,5 @@
-﻿using SpbHouseAgeBot.Models;
+﻿using HtmlAgilityPack;
+using SpbHouseAgeBot.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -29,15 +30,42 @@ namespace SpbHouseAgeBot.Services
             return client.GetAsync(fullUrl).Result;
         }
 
+        public IEnumerable<Address> ParseHtmlForAddresses(string rawHtml)
+        {
+            var result = new List<Address>();
+            HtmlDocument pageDocument = new HtmlDocument();
+            pageDocument.LoadHtml(rawHtml);
+            var table = pageDocument.DocumentNode.SelectSingleNode("//table");
+
+            foreach (HtmlNode row in table.SelectNodes("//tr"))
+            {
+                foreach (HtmlNode cell in row.SelectNodes("//td/a/@href"))
+                {
+                    result.Add(new Address
+                    {
+                        Name = cell.InnerText
+                        // todo add year of construction
+                        // todo add age field
+                        // todo: add additional search for second page
+                        // todo: remove duplicated data
+                    });
+                }
+            }
+
+            return result;
+        }
+
         public IEnumerable<Address> GetAddressFromUserQuery(string[] searchParams)
         {
             var response = GetDataFromUrl(searchParams);
-            //todo: check the result is 200, parse li elements. Make them valid Address objects and return the list of them
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException("Please check the MIN.ZHKKH service link connection");
+            }
+
             var rawHtml = response.Content.ReadAsStringAsync().Result;
-
-            //todo: add additional search for second page
-
-            return new List<Address>();
+            return ParseHtmlForAddresses(rawHtml);
         }
 
         public IEnumerable<Address> GetAddressFromUserLocation(string longitude, string latitude)
