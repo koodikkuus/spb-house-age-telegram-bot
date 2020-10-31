@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SpbHouseAgeBot.Models
 {
@@ -9,5 +7,10 @@ namespace SpbHouseAgeBot.Models
         public string Name { get; set; }
         public string Longitude { get; set; }
         public string Latitude { get; set; }
+        public int ConstructionYear { get; set; }
+
+        public string Year() => ConstructionYear != 0 
+            ? (DateTime.Now.Year - ConstructionYear).ToString() 
+            : "unkknown";
     }
 }
